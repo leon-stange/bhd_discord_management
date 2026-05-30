@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { isOwner } = require('../utils/permissions');
+const { isOwner, isOwnerOrAdmin } = require('../utils/permissions');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,9 +13,19 @@ module.exports = {
       .setDescription('Hier sind alle verfügbaren Befehle:')
       .addFields(
         { name: 'ℹ️ Allgemein', value: '`/help` – Diese Hilfe anzeigen\n`/ping` – Bot-Latenz überprüfen', inline: false },
+        { name: '📢 Ankündigungen', value: '`/announce` – Ankündigung erstellen\n`/embed` – Benutzerdefiniertes Embed erstellen', inline: false },
       )
       .setFooter({ text: 'Discord Management Bot' })
       .setTimestamp();
+
+    // Admin-Befehle nur für Admins anzeigen
+    if (isOwnerOrAdmin(interaction.member)) {
+      embed.addFields({
+        name: '🔐 Admin-Befehle',
+        value: '`/announce` und `/embed` sind nur für Administratoren verfügbar.',
+        inline: false,
+      });
+    }
 
     // Owner-Befehle nur für den Owner anzeigen
     if (isOwner(interaction.user.id)) {
