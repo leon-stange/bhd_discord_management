@@ -18,6 +18,7 @@ bhd_discord_management/
     │   ├── help.js            # Hilfe-Befehl
     │   ├── userdetail.js      # Nutzer-Infos abrufen
     │   ├── serverinfo.js      # Server-Infos abrufen
+    │   ├── botinfo.js          # Bot-Infos abrufen
     │   ├── announce.js        # Ankündigung erstellen
     │   ├── announce-delete.js # Ankündigungen löschen
     │   ├── embed.js           # Benutzerdefiniertes Embed erstellen
@@ -109,6 +110,7 @@ npm run dev
 |---|---|---|
 | `/userdetail` | Zeigt detaillierte Infos über einen Nutzer an | Moderator / Admin / Owner |
 | `/serverinfo` | Zeigt detaillierte Infos über den Server an | Admin / Owner |
+| `/botinfo` | Zeigt detaillierte Infos über den Bot an | Admin / Owner |
 
 ### 🛡️ Auto-Mod (automatisch)
 

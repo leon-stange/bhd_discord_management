@@ -22,7 +22,7 @@ module.exports = {
     if (isOwnerOrAdmin(interaction.member)) {
       embed.addFields({
         name: '🔐 Admin-Befehle',
-        value: '`/announce` – Ankündigung erstellen\n`/announce-delete` – Bot-Nachrichten löschen\n`/embed` – Embed erstellen\n`/commands-clear` – Commands-Channel leeren\n`/serverinfo` – Server-Infos anzeigen',
+        value: '`/announce` – Ankündigung erstellen\n`/announce-delete` – Bot-Nachrichten löschen\n`/embed` – Embed erstellen\n`/commands-clear` – Commands-Channel leeren\n`/serverinfo` – Server-Infos anzeigen\n`/botinfo` – Bot-Infos anzeigen',
         inline: false,
       });
     }
