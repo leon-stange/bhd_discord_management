@@ -13,7 +13,7 @@ module.exports = {
       .setDescription('Hier sind alle verfügbaren Befehle:')
       .addFields(
         { name: 'ℹ️ Allgemein', value: '`/help` – Diese Hilfe anzeigen\n`/ping` – Bot-Latenz überprüfen', inline: false },
-        { name: '📢 Ankündigungen', value: '`/announce` – Ankündigung erstellen\n`/embed` – Benutzerdefiniertes Embed erstellen', inline: false },
+        { name: '📢 Ankündigungen', value: '`/announce` – Ankündigung erstellen\n`/announce-delete` – Alle Ankündigungen löschen\n`/embed` – Benutzerdefiniertes Embed erstellen', inline: false },
       )
       .setFooter({ text: 'Discord Management Bot' })
       .setTimestamp();
