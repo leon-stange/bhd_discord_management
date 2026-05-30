@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { isOwner, isOwnerOrAdmin } = require('../utils/permissions');
+const { isOwner, isOwnerOrAdmin, isModerator } = require('../utils/permissions');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
       .setTitle('🛡️ Management Bot – Befehle')
       .setDescription('Hier sind alle verfügbaren Befehle:')
       .addFields(
-        { name: 'ℹ️ Allgemein', value: '`/help` – Diese Hilfe anzeigen\n`/ping` – Bot-Latenz überprüfen\n`/userdetail` – Infos über einen Nutzer anzeigen\n`/serverinfo` – Infos über den Server anzeigen', inline: false },
+        { name: 'ℹ️ Allgemein', value: '`/help` – Diese Hilfe anzeigen\n`/ping` – Bot-Latenz überprüfen', inline: false },
         { name: '📢 Ankündigungen', value: '`/announce` – Ankündigung erstellen\n`/announce-delete` – Alle Ankündigungen löschen\n`/embed` – Benutzerdefiniertes Embed erstellen', inline: false },
       )
       .setFooter({ text: 'Discord Management Bot' })
@@ -22,7 +22,16 @@ module.exports = {
     if (isOwnerOrAdmin(interaction.member)) {
       embed.addFields({
         name: '🔐 Admin-Befehle',
-        value: '`/announce` – Ankündigung erstellen\n`/announce-delete` – Bot-Nachrichten löschen\n`/embed` – Embed erstellen\n`/commands-clear` – Commands-Channel leeren',
+        value: '`/announce` – Ankündigung erstellen\n`/announce-delete` – Bot-Nachrichten löschen\n`/embed` – Embed erstellen\n`/commands-clear` – Commands-Channel leeren\n`/serverinfo` – Server-Infos anzeigen',
+        inline: false,
+      });
+    }
+
+    // Moderator-Befehle nur für Moderatoren anzeigen
+    if (isModerator(interaction.member)) {
+      embed.addFields({
+        name: '🛡️ Moderator-Befehle',
+        value: '`/userdetail` – Nutzer-Infos anzeigen',
         inline: false,
       });
     }

@@ -84,8 +84,8 @@ npm run dev
 |---|---|---|
 | `/help` | Zeigt alle verfügbaren Befehle an | Jeder |
 | `/ping` | Zeigt die Bot- und API-Latenz an | Jeder |
-| `/userdetail` | Zeigt detaillierte Infos über einen Nutzer an | Jeder |
-| `/serverinfo` | Zeigt detaillierte Infos über den Server an | Jeder |
+| `/userdetail` | Zeigt detaillierte Infos über einen Nutzer an | Moderator / Admin / Owner |
+| `/serverinfo` | Zeigt detaillierte Infos über den Server an | Admin / Owner |
 
 ### 📢 Ankündigungen
 

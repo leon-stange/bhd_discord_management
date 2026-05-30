@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { isOwnerOrAdmin } = require('../utils/permissions');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -6,6 +7,10 @@ module.exports = {
     .setDescription('Zeigt detaillierte Informationen über den Server an'),
 
   async execute(interaction) {
+    if (!isOwnerOrAdmin(interaction.member)) {
+      return interaction.reply({ content: '❌ Nur Admins können diesen Befehl nutzen.', flags: 64 });
+    }
+
     const guild = interaction.guild;
 
     // Server-Infos sammeln

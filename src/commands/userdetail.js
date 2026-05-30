@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { isOwnerOrAdmin, isModerator } = require('../utils/permissions');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,6 +13,10 @@ module.exports = {
     ),
 
   async execute(interaction) {
+    if (!isOwnerOrAdmin(interaction.member) && !isModerator(interaction.member)) {
+      return interaction.reply({ content: '❌ Nur Moderatoren und Admins können diesen Befehl nutzen.', flags: 64 });
+    }
+
     const target = interaction.options.getUser('nutzer') || interaction.user;
     const member = await interaction.guild.members.fetch(target.id).catch(() => null);
 
