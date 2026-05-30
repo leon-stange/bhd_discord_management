@@ -64,7 +64,6 @@ async function handleMessage(message) {
 
   // ── Anti-Spam ──────────────────────────────────────────────────
   const now = Date.now();
-  const userId = message.author.id;
 
   if (!userMessageMap.has(userId)) {
     userMessageMap.set(userId, []);
