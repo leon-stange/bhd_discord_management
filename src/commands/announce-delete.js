@@ -4,7 +4,7 @@ const { isOwnerOrAdmin } = require('../utils/permissions');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('announce-delete')
-    .setDescription('Löscht alle Ankündigungen aus dem Ankündigungs-Channel')
+    .setDescription('Löscht alle Bot-Nachrichten aus dem Ankündigungs-Channel')
     .addChannelOption(option =>
       option
         .setName('channel')
@@ -16,7 +16,7 @@ module.exports = {
     // Nur Admins und Owner dürfen löschen
     if (!isOwnerOrAdmin(interaction.member)) {
       return interaction.reply({
-        content: '❌ Nur Administratoren können Ankündigungen löschen.',
+        content: `❌ Nur Administratoren können Bot-Nachrichten löschen.`,
         flags: 64,
       });
     }
@@ -31,7 +31,7 @@ module.exports = {
     }
 
     await interaction.reply({
-      content: `⏳ Lösche alle Nachrichten in <#${channel.id}>...`,
+      content: `⏳ Lösche alle Bot-Nachrichten in <#${channel.id}>...`,
       flags: 64,
     });
 
@@ -48,29 +48,36 @@ module.exports = {
           break;
         }
 
+        // Nur Nachrichten des Bots herausfiltern
+        const botMessages = messages.filter(m => m.author.id === interaction.client.user.id);
+
+        if (botMessages.size === 0) {
+          // Keine Bot-Nachrichten mehr gefunden → fertig
+          continueDeleting = false;
+          break;
+        }
+
         // Nachrichten, die jünger als 14 Tage sind, können bulk-deleted werden
         const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
-        const recentMessages = messages.filter(m => m.createdTimestamp > twoWeeksAgo);
-        const oldMessages = messages.filter(m => m.createdTimestamp <= twoWeeksAgo);
+        const recentBotMessages = botMessages.filter(m => m.createdTimestamp > twoWeeksAgo);
+        const oldBotMessages = botMessages.filter(m => m.createdTimestamp <= twoWeeksAgo);
 
-        // Bulk-Delete für Nachrichten < 14 Tage
-        if (recentMessages.size > 0) {
-          if (recentMessages.size === 1) {
-            // Discord erlaubt kein bulk-delete von nur 1 Nachricht
-            await recentMessages.first().delete();
+        // Bulk-Delete für Bot-Nachrichten < 14 Tage
+        if (recentBotMessages.size > 0) {
+          if (recentBotMessages.size === 1) {
+            await recentBotMessages.first().delete();
             deletedCount += 1;
           } else {
-            const deleted = await channel.bulkDelete(recentMessages, true);
+            const deleted = await channel.bulkDelete(recentBotMessages, true);
             deletedCount += deleted.size;
           }
         }
 
-        // Einzel-Delete für Nachrichten > 14 Tage
-        for (const msg of oldMessages.values()) {
+        // Einzel-Delete für Bot-Nachrichten > 14 Tage
+        for (const msg of oldBotMessages.values()) {
           try {
             await msg.delete();
             deletedCount++;
-            // Rate-Limit vermeiden
             await new Promise(resolve => setTimeout(resolve, 200));
           } catch {
             // Nachricht evtl. schon gelöscht
@@ -84,7 +91,7 @@ module.exports = {
       }
 
       await interaction.followUp({
-        content: `✅ **${deletedCount}** Nachrichten in <#${channel.id}> gelöscht!`,
+        content: `✅ **${deletedCount}** Bot-Nachrichten in <#${channel.id}> gelöscht!`,
         flags: 64,
       });
 

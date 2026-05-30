@@ -6,20 +6,27 @@ Discord Management Bot für Server-Verwaltung, Moderation und Administration.
 
 ```
 bhd_discord_management/
-├── .env.example          # Vorlage für Umgebungsvariablen
-├── package.json          # Projekt-Konfiguration & Dependencies
-├── README.md             # Dokumentation
+├── .env.example              # Vorlage für Umgebungsvariablen
+├── .gitignore                # Git-Ignore (node_modules, .env)
+├── package.json              # Projekt-Konfiguration & Dependencies
+├── README.md                 # Dokumentation
 └── src/
-    ├── index.js           # Bot-Einstiegspunkt
-    ├── deploy-commands.js  # Slash-Commands registrieren
-    ├── commands/           # Slash-Commands
-    │   ├── help.js        # Hilfe-Befehl
-    │   └── ping.js        # Ping/Latenz-Befehl
-    ├── events/             # Discord-Events
-    │   ├── ready.js       # Bot-Ready Event
-    │   └── interactionCreate.js  # Interaction-Handler
-    └── utils/              # Hilfsfunktionen
-        └── permissions.js  # Berechtigungs-Utilities
+    ├── index.js               # Bot-Einstiegspunkt
+    ├── deploy-commands.js     # Slash-Commands registrieren
+    ├── commands/              # Slash-Commands
+    │   ├── ping.js            # Ping/Latenz-Befehl
+    │   ├── help.js            # Hilfe-Befehl
+    │   ├── announce.js        # Ankündigung erstellen
+    │   ├── announce-delete.js # Ankündigungen löschen
+    │   └── embed.js           # Benutzerdefiniertes Embed erstellen
+    ├── events/                # Discord-Events
+    │   ├── ready.js           # Bot-Ready Event
+    │   ├── interactionCreate.js  # Interaction-Handler
+    │   └── messageCreate.js   # Message Event (Auto-Mod)
+    ├── handlers/              # Handler-Logik
+    │   └── autoModHandler.js  # Auto-Mod (Anti-Spam, Anti-Link, Bad-Words)
+    └── utils/                 # Hilfsfunktionen
+        └── permissions.js     # Berechtigungs-Utilities
 ```
 
 ## 🚀 Einrichtung
@@ -47,9 +54,11 @@ Folgende Werte müssen gesetzt werden:
 | `GUILD_ID` | ID des Discord-Servers |
 | `OWNER_ID` | Discord-ID des Bot-Owners |
 | `BOT_CHANNEL_ID` | Channel, in dem Befehle erlaubt sind (optional) |
-| `LOG_CHANNEL_ID` | Channel für Bot-Logs (optional) |
-| `ADMIN_ROLE_ID` | ID der Admin-Rolle (optional) |
-| `MODERATOR_ROLE_ID` | ID der Moderator-Rolle (optional) |
+| `LOG_CHANNEL_ID` | Channel für Bot-Logs |
+| `ANNOUNCE_CHANNEL_ID` | Channel für Ankündigungen (Standard für `/announce`) |
+| `ADMIN_ROLE_ID` | ID der Admin-Rolle |
+| `MODERATOR_ROLE_ID` | ID der Moderator-Rollen (kommagetrennt für mehrere) |
+| `BAD_WORDS` | Verbotene Wörter, kommagetrennt (optional) |
 
 ### 3. Slash-Commands registrieren
 
@@ -69,11 +78,40 @@ npm run dev
 
 ## 📜 Verfügbare Befehle
 
-| Befehl | Beschreibung |
+### ℹ️ Allgemein
+
+| Befehl | Beschreibung | Berechtigung |
+|---|---|---|
+| `/help` | Zeigt alle verfügbaren Befehle an | Jeder |
+| `/ping` | Zeigt die Bot- und API-Latenz an | Jeder |
+
+### 📢 Ankündigungen
+
+| Befehl | Beschreibung | Berechtigung |
+|---|---|---|
+| `/announce nachricht:...` | Erstellt eine Ankündigung im Ankündigungs-Channel | Admin / Owner |
+| `/announce nachricht:... titel:...` | Ankündigung mit eigenem Titel-Zusatz | Admin / Owner |
+| `/announce nachricht:... farbe:...` | Ankündigung mit eigener Farbe (Hex-Code) | Admin / Owner |
+| `/announce nachricht:... bild:...` | Ankündigung mit Bild | Admin / Owner |
+| `/announce nachricht:... channel:...` | Ankündigung in einem bestimmten Channel | Admin / Owner |
+| `/announce-delete` | Löscht alle Nachrichten im Ankündigungs-Channel | Admin / Owner |
+| `/embed titel:... beschreibung:...` | Erstellt ein benutzerdefiniertes Embed | Admin / Owner |
+
+> **Hinweis:** Der Titel bei `/announce` wird automatisch mit **"📢 Saalekreis-RP \| Neuigkeit"** vorangestellt. Ohne Titel-Zusatz heißt es einfach "📢 Saalekreis-RP \| Neuigkeit".
+
+### 🛡️ Auto-Mod (automatisch)
+
+Die Auto-Mod greift automatisch auf **alle Nutzer** und benötigt keinen Befehl:
+
+| Feature | Beschreibung |
 |---|---|
-| `/help` | Zeigt alle verfügbaren Befehle |
-| `/ping` | Zeigt die Bot-Latenz |
+| **Anti-Spam** | Mehr als 5 Nachrichten in 5 Sekunden → Nachricht löschen + 5 Min Timeout |
+| **Anti-Link** | Alle URLs werden automatisch gelöscht |
+| **Anti-Discord-Invite** | Discord-Einladungslinks werden blockiert |
+| **Bad-Word-Filter** | Verbotene Wörter (konfigurierbar über `BAD_WORDS` in `.env`) werden gelöscht |
+| **Mod-Log** | Jeder Auto-Mod-Eingriff wird im Log-Channel protokolliert |
+| **DM-Benachrichtigung** | Der Nutzer bekommt eine DM bei jedem Eingriff |
 
 ## 🔧 Entwicklung
 
-Neue Commands kommen in `src/commands/`, neue Events in `src/events/`. Nach dem Hinzufügen neuer Commands müssen diese mit `npm run deploy` neu registriert werden.
+Neue Commands kommen in `src/commands/`, neue Events in `src/events/`, Handler in `src/handlers/`. Nach dem Hinzufügen neuer Commands müssen diese mit `npm run deploy` neu registriert werden.
