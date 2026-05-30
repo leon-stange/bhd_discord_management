@@ -7,15 +7,15 @@ module.exports = {
     .setDescription('Erstellt eine Ankündigung im aktuellen oder einem anderen Channel')
     .addStringOption(option =>
       option
-        .setName('titel')
-        .setDescription('Titel der Ankündigung')
+        .setName('nachricht')
+        .setDescription('Inhalt der Ankündigung')
         .setRequired(true)
     )
     .addStringOption(option =>
       option
-        .setName('nachricht')
-        .setDescription('Inhalt der Ankündigung')
-        .setRequired(true)
+        .setName('titel')
+        .setDescription('Optionaler Zusatz im Titel (Standard: Saalekreis-RP | Neuigkeit)')
+        .setRequired(false)
     )
     .addChannelOption(option =>
       option
@@ -60,9 +60,13 @@ module.exports = {
       embedColor = 0xED4245;
     }
 
+    const embedTitle = titel
+      ? `📢 Saalekreis-RP | Neuigkeit – ${titel}`
+      : `📢 Saalekreis-RP | Neuigkeit`;
+
     const embed = new EmbedBuilder()
       .setColor(embedColor)
-      .setTitle(`📢 Saalekreis-RP | Neuigkeit – ${titel}`)
+      .setTitle(embedTitle)
       .setDescription(nachricht)
       .setFooter({
         text: `Ankündigung von ${interaction.user.tag}`,
