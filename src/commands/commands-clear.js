@@ -67,14 +67,15 @@ module.exports = {
           try {
             await msg.delete();
             deletedCount++;
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await new Promise(resolve => setTimeout(resolve, 300));
           } catch {
             // Nachricht evtl. schon gelöscht
           }
         }
 
-        // Wenn weniger als 100 Nachrichten, sind wir fertig
-        if (messages.size < 100) {
+        // Wenn keine Nachrichten mehr im Channel, fertig
+        const remaining = await channel.messages.fetch({ limit: 1 });
+        if (remaining.size === 0) {
           continueDeleting = false;
         }
       }

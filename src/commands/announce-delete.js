@@ -78,14 +78,16 @@ module.exports = {
           try {
             await msg.delete();
             deletedCount++;
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await new Promise(resolve => setTimeout(resolve, 300));
           } catch {
             // Nachricht evtl. schon gelöscht
           }
         }
 
-        // Wenn weniger als 100 Nachrichten geholt wurden, sind wir fertig
-        if (messages.size < 100) {
+        // Prüfen ob noch Bot-Nachrichten im Channel sind
+        const remaining = await channel.messages.fetch({ limit: 100 });
+        const remainingBot = remaining.filter(m => m.author.id === interaction.client.user.id);
+        if (remainingBot.size === 0) {
           continueDeleting = false;
         }
       }
