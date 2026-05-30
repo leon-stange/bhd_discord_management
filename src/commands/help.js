@@ -31,7 +31,7 @@ module.exports = {
     if (isModerator(interaction.member)) {
       embed.addFields({
         name: '🛡️ Moderator-Befehle',
-        value: '`/userdetail` – Nutzer-Infos anzeigen',
+        value: '`/userdetail` – Nutzer-Infos anzeigen\n`/verify` – Nutzer manuell verifizieren',
         inline: false,
       });
     }

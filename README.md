@@ -62,6 +62,8 @@ Folgende Werte müssen gesetzt werden:
 | `ANNOUNCE_CHANNEL_ID` | Channel für Ankündigungen (Standard für `/announce`) |
 | `ADMIN_ROLE_ID` | ID der Admin-Rolle |
 | `MODERATOR_ROLE_ID` | ID der Moderator-Rollen (kommagetrennt für mehrere) |
+| `UNVERIFIED_ROLE_ID` | ID der Unverifiziert-Rolle (wird bei /verify entfernt) |
+| `VERIFIED_ROLE_ID` | ID der Verifiziert-Rolle (wird bei /verify vergeben) |
 | `BAD_WORDS` | Verbotene Wörter, kommagetrennt (optional) |
 
 ### 3. Slash-Commands registrieren
@@ -109,6 +111,7 @@ npm run dev
 | Befehl | Beschreibung | Berechtigung |
 |---|---|---|
 | `/userdetail` | Zeigt detaillierte Infos über einen Nutzer an | Moderator / Admin / Owner |
+| `/verify` | Verifiziert einen Nutzer manuell (entfernt Unverifiziert-Rolle, gibt Verifiziert-Rolle) | Moderator / Admin / Owner |
 | `/serverinfo` | Zeigt detaillierte Infos über den Server an | Admin / Owner |
 | `/botinfo` | Zeigt detaillierte Infos über den Bot an | Admin / Owner |
 
