@@ -22,8 +22,7 @@ bhd_discord_management/
     │   ├── announce.js        # Ankündigung erstellen
     │   ├── announce-delete.js # Ankündigungen löschen
     │   ├── embed.js           # Benutzerdefiniertes Embed erstellen
-    │   └── commands-clear.js  # Channel-Nachrichten löschen
-    ├── events/                # Discord-Events
+    │   └── commands-clear.js  # Channel-Nachrichten löschen    │   └── verify.js           # Nutzer manuell verifizieren    ├── events/                # Discord-Events
     │   ├── ready.js           # Bot-Ready Event
     │   ├── interactionCreate.js  # Interaction-Handler
     │   └── messageCreate.js   # Message Event (Auto-Mod)
