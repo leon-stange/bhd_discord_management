@@ -62,7 +62,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor(embedColor)
-      .setTitle(`📢 ${titel}`)
+      .setTitle(`📢 Saalekreis-RP | Neuigkeit – ${titel}`)
       .setDescription(nachricht)
       .setFooter({
         text: `Ankündigung von ${interaction.user.tag}`,
