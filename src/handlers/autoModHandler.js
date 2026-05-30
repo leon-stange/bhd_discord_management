@@ -77,11 +77,12 @@ async function handleMessage(message) {
         }
       }
 
-      // Warnung im Channel
+      // Warnung im Channel (Bad Words nicht anzeigen)
+      const channelViolations = violations.map(v => v.startsWith('Bad Word:') ? 'Unangemessenes Wort' : v);
       try {
         const warning = await message.channel.send(
           `⚠️ <@${message.author.id}> Deine Nachricht wurde automatisch gelöscht.\n` +
-          `**Grund:** ${violations.join(', ')}${violations.includes('Spam') ? '\nDu wurdest für 5 Minuten stummgeschaltet.' : ''}`
+          `**Grund:** ${channelViolations.join(', ')}${violations.includes('Spam') ? '\nDu wurdest für 5 Minuten stummgeschaltet.' : ''}`
         );
         // Warnung nach 10 Sekunden löschen
         setTimeout(() => warning.delete().catch(() => {}), 10000);
