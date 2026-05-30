@@ -16,9 +16,12 @@ bhd_discord_management/
     ├── commands/              # Slash-Commands
     │   ├── ping.js            # Ping/Latenz-Befehl
     │   ├── help.js            # Hilfe-Befehl
+    │   ├── userdetail.js      # Nutzer-Infos abrufen
+    │   ├── serverinfo.js      # Server-Infos abrufen
     │   ├── announce.js        # Ankündigung erstellen
     │   ├── announce-delete.js # Ankündigungen löschen
-    │   └── embed.js           # Benutzerdefiniertes Embed erstellen
+    │   ├── embed.js           # Benutzerdefiniertes Embed erstellen
+    │   └── commands-clear.js  # Channel-Nachrichten löschen
     ├── events/                # Discord-Events
     │   ├── ready.js           # Bot-Ready Event
     │   ├── interactionCreate.js  # Interaction-Handler
@@ -84,8 +87,6 @@ npm run dev
 |---|---|---|
 | `/help` | Zeigt alle verfügbaren Befehle an | Jeder |
 | `/ping` | Zeigt die Bot- und API-Latenz an | Jeder |
-| `/userdetail` | Zeigt detaillierte Infos über einen Nutzer an | Moderator / Admin / Owner |
-| `/serverinfo` | Zeigt detaillierte Infos über den Server an | Admin / Owner |
 
 ### 📢 Ankündigungen
 
@@ -98,8 +99,16 @@ npm run dev
 | `/announce nachricht:... channel:...` | Ankündigung in einem bestimmten Channel | Admin / Owner |
 | `/announce-delete` | Löscht alle Bot-Nachrichten im Ankündigungs-Channel | Admin / Owner |
 | `/embed titel:... beschreibung:...` | Erstellt ein benutzerdefiniertes Embed | Admin / Owner |
+| `/commands-clear` | Löscht alle Nachrichten in einem Channel | Admin / Owner |
 
 > **Hinweis:** Der Titel bei `/announce` wird automatisch mit **"📢 Saalekreis-RP \| Neuigkeit"** vorangestellt. Ohne Titel-Zusatz heißt es einfach "📢 Saalekreis-RP \| Neuigkeit".
+
+### 🛡️ Moderation
+
+| Befehl | Beschreibung | Berechtigung |
+|---|---|---|
+| `/userdetail` | Zeigt detaillierte Infos über einen Nutzer an | Moderator / Admin / Owner |
+| `/serverinfo` | Zeigt detaillierte Infos über den Server an | Admin / Owner |
 
 ### 🛡️ Auto-Mod (automatisch)
 
