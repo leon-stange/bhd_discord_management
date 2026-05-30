@@ -2,9 +2,10 @@ const { EmbedBuilder } = require('discord.js');
 
 // ─── Konfiguration ────────────────────────────────────────────────
 const SPAM_CONFIG = {
-  maxMessages: 5,        // Max. Nachrichten im Zeitfenster
-  timeWindow: 5000,     // Zeitfenster in ms (5 Sekunden)
-  muteDuration: 300000, // Timeout-Dauer in ms (5 Minuten)
+  maxMessages: 4,         // Max. Nachrichten im Zeitfenster
+  timeWindow: 6000,      // Zeitfenster in ms (6 Sekunden)
+  muteDuration: 300000,  // Timeout-Dauer in ms (5 Minuten)
+  deleteRecentCount: 5,   // Anzahl der letzten Nachrichten die bei Spam gelöscht werden
 };
 
 const LINK_REGEX = /https?:\/\/[^\s]+/i;
@@ -29,6 +30,23 @@ async function handleMessage(message) {
   if (message.author.bot || !message.guild) return;
 
   const violations = [];
+
+  // ── Spam-Flag prüfen (bereits als Spammer markiert?) ────────────
+  const userId = message.author.id;
+  const userEntry = userMessageMap.get(userId);
+  if (userEntry && userEntry.includes('SPAM_FLAG')) {
+    // Noch im Timeout-Fenster? Dann sofort löschen
+    const firstTimestamp = userEntry.find(t => typeof t === 'number');
+    if (firstTimestamp && (Date.now() - firstTimestamp) < SPAM_CONFIG.muteDuration) {
+      try {
+        await message.delete();
+      } catch {}
+      return;
+    } else {
+      // Timeout abgelaufen, Flag entfernen
+      userMessageMap.delete(userId);
+    }
+  }
 
   // ── Anti-Link ──────────────────────────────────────────────────
   if (DISCORD_INVITE_REGEX.test(message.content)) {
@@ -61,6 +79,8 @@ async function handleMessage(message) {
 
   if (filtered.length >= SPAM_CONFIG.maxMessages) {
     violations.push('Spam');
+    // Spam-Flag setzen, damit weitere Nachrichten sofort gelöscht werden
+    userMessageMap.set(userId, [...filtered, 'SPAM_FLAG']);
   }
 
   // ── Maßnahmen ergreifen ────────────────────────────────────────
@@ -74,6 +94,17 @@ async function handleMessage(message) {
         const member = await message.guild.members.fetch(userId).catch(() => null);
         if (member) {
           await member.timeout(SPAM_CONFIG.muteDuration, 'Auto-Mod: Spam erkannt');
+        }
+
+        // Zusätzlich: Letzte Nachrichten des Nutzers im Channel löschen
+        try {
+          const recentMessages = await message.channel.messages.fetch({ limit: SPAM_CONFIG.deleteRecentCount });
+          const userRecentMessages = recentMessages.filter(m => m.author.id === userId);
+          if (userRecentMessages.size > 0) {
+            await message.channel.bulkDelete(userRecentMessages, true).catch(() => {});
+          }
+        } catch {
+          // Fehler beim Bulk-Delete ignorieren
         }
       }
 
