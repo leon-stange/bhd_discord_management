@@ -77,15 +77,17 @@ async function handleMessage(message) {
         }
       }
 
-      // DM an den Nutzer
+      // Warnung im Channel
       try {
-        await message.author.send(
-          `⚠️ Deine Nachricht in **${message.guild.name}** wurde automatisch gelöscht.\n` +
+        const warning = await message.channel.send(
+          `⚠️ <@${message.author.id}> Deine Nachricht wurde automatisch gelöscht.\n` +
           `**Grund:** ${violations.join(', ')}\n` +
           `${violations.includes('Spam') ? 'Du wurdest für 5 Minuten stummgeschaltet.' : 'Bitte halte dich an die Serverregeln.'}`
         );
+        // Warnung nach 10 Sekunden löschen
+        setTimeout(() => warning.delete().catch(() => {}), 10000);
       } catch {
-        // DM konnte nicht gesendet werden
+        // Warnung konnte nicht gesendet werden
       }
 
       // Log-Eintrag
