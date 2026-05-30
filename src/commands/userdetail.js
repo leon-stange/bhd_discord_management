@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('userinfo')
+    .setName('userdetail')
     .setDescription('Zeigt detaillierte Informationen über einen Nutzer an')
     .addUserOption(option =>
       option
@@ -66,7 +66,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor(member.displayHexColor || 0x5865F2)
-      .setTitle(`👤 Nutzerinfo: ${target.username}`)
+      .setTitle(`👤 Nutzerdetails: ${target.username}`)
       .setThumbnail(target.displayAvatarURL({ size: 256 }))
       .addFields(
         { name: '🏷️ Name', value: `${target.tag}`, inline: true },
