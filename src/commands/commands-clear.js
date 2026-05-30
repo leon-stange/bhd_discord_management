@@ -47,34 +47,19 @@ module.exports = {
           break;
         }
 
-        const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
-        const recentMessages = messages.filter(m => m.createdTimestamp > twoWeeksAgo);
-        const oldMessages = messages.filter(m => m.createdTimestamp <= twoWeeksAgo);
-
-        // Bulk-Delete für Nachrichten < 14 Tage
-        if (recentMessages.size > 0) {
-          if (recentMessages.size === 1) {
-            await recentMessages.first().delete();
-            deletedCount += 1;
-          } else {
-            const deleted = await channel.bulkDelete(recentMessages, true);
-            deletedCount += deleted.size;
-          }
-        }
-
-        // Einzel-Delete für Nachrichten > 14 Tage
-        for (const msg of oldMessages.values()) {
+        // Alle Nachrichten einzeln löschen (zuverlässiger als bulkDelete)
+        for (const msg of messages.values()) {
           try {
             await msg.delete();
             deletedCount++;
             await new Promise(resolve => setTimeout(resolve, 300));
           } catch {
-            // Nachricht evtl. schon gelöscht
+            // Nachricht evtl. schon gelöscht oder keine Berechtigung
           }
         }
 
-        // Wenn keine Nachrichten mehr im Channel, fertig
-        const remaining = await channel.messages.fetch({ limit: 1 });
+        // Prüfen ob noch Nachrichten übrig sind
+        const remaining = await channel.messages.fetch({ limit: 10 });
         if (remaining.size === 0) {
           continueDeleting = false;
         }

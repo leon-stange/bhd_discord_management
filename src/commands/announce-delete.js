@@ -40,7 +40,6 @@ module.exports = {
 
     try {
       while (continueDeleting) {
-        // Fetch bis zu 100 Nachrichten
         const messages = await channel.messages.fetch({ limit: 100 });
 
         if (messages.size === 0) {
@@ -52,29 +51,12 @@ module.exports = {
         const botMessages = messages.filter(m => m.author.id === interaction.client.user.id);
 
         if (botMessages.size === 0) {
-          // Keine Bot-Nachrichten mehr gefunden → fertig
           continueDeleting = false;
           break;
         }
 
-        // Nachrichten, die jünger als 14 Tage sind, können bulk-deleted werden
-        const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
-        const recentBotMessages = botMessages.filter(m => m.createdTimestamp > twoWeeksAgo);
-        const oldBotMessages = botMessages.filter(m => m.createdTimestamp <= twoWeeksAgo);
-
-        // Bulk-Delete für Bot-Nachrichten < 14 Tage
-        if (recentBotMessages.size > 0) {
-          if (recentBotMessages.size === 1) {
-            await recentBotMessages.first().delete();
-            deletedCount += 1;
-          } else {
-            const deleted = await channel.bulkDelete(recentBotMessages, true);
-            deletedCount += deleted.size;
-          }
-        }
-
-        // Einzel-Delete für Bot-Nachrichten > 14 Tage
-        for (const msg of oldBotMessages.values()) {
+        // Alle Bot-Nachrichten einzeln löschen
+        for (const msg of botMessages.values()) {
           try {
             await msg.delete();
             deletedCount++;
