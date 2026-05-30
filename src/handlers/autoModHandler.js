@@ -81,8 +81,7 @@ async function handleMessage(message) {
       try {
         const warning = await message.channel.send(
           `⚠️ <@${message.author.id}> Deine Nachricht wurde automatisch gelöscht.\n` +
-          `**Grund:** ${violations.join(', ')}\n` +
-          `${violations.includes('Spam') ? 'Du wurdest für 5 Minuten stummgeschaltet.' : 'Bitte halte dich an die Serverregeln.'}`
+          `**Grund:** ${violations.join(', ')}${violations.includes('Spam') ? '\nDu wurdest für 5 Minuten stummgeschaltet.' : ''}`
         );
         // Warnung nach 10 Sekunden löschen
         setTimeout(() => warning.delete().catch(() => {}), 10000);
