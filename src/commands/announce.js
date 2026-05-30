@@ -60,8 +60,8 @@ module.exports = {
       embedColor = 0xED4245;
     }
 
-    const embedTitle = titel
-      ? `📢 Saalekreis-RP | Neuigkeit – ${titel}`
+    const embedTitle = titel && titel.trim()
+      ? `📢 Saalekreis-RP | Neuigkeit – ${titel.trim()}`
       : `📢 Saalekreis-RP | Neuigkeit`;
 
     const embed = new EmbedBuilder()
