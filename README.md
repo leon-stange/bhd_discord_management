@@ -94,7 +94,7 @@ npm run dev
 | `/announce nachricht:... farbe:...` | Ankündigung mit eigener Farbe (Hex-Code) | Admin / Owner |
 | `/announce nachricht:... bild:...` | Ankündigung mit Bild | Admin / Owner |
 | `/announce nachricht:... channel:...` | Ankündigung in einem bestimmten Channel | Admin / Owner |
-| `/announce-delete` | Löscht alle Nachrichten im Ankündigungs-Channel | Admin / Owner |
+| `/announce-delete` | Löscht alle Bot-Nachrichten im Ankündigungs-Channel | Admin / Owner |
 | `/embed titel:... beschreibung:...` | Erstellt ein benutzerdefiniertes Embed | Admin / Owner |
 
 > **Hinweis:** Der Titel bei `/announce` wird automatisch mit **"📢 Saalekreis-RP \| Neuigkeit"** vorangestellt. Ohne Titel-Zusatz heißt es einfach "📢 Saalekreis-RP \| Neuigkeit".
@@ -108,9 +108,9 @@ Die Auto-Mod greift automatisch auf **alle Nutzer** und benötigt keinen Befehl:
 | **Anti-Spam** | Mehr als 5 Nachrichten in 5 Sekunden → Nachricht löschen + 5 Min Timeout |
 | **Anti-Link** | Alle URLs werden automatisch gelöscht |
 | **Anti-Discord-Invite** | Discord-Einladungslinks werden blockiert |
-| **Bad-Word-Filter** | Verbotene Wörter (konfigurierbar über `BAD_WORDS` in `.env`) werden gelöscht |
-| **Mod-Log** | Jeder Auto-Mod-Eingriff wird im Log-Channel protokolliert |
-| **DM-Benachrichtigung** | Der Nutzer bekommt eine DM bei jedem Eingriff |
+| **Bad-Word-Filter** | Verbotene Wörter (konfigurierbar über `BAD_WORDS` in `.env`) werden gelöscht. Im Channel wird nur "Unangemessenes Wort" angezeigt, im Log-Channel steht das genaue Wort |
+| **Mod-Log** | Jeder Auto-Mod-Eingriff wird im Log-Channel protokolliert (inkl. Originalnachricht) |
+| **Channel-Warnung** | Der Nutzer bekommt eine Warnung im Channel (wird nach 10 Sek. automatisch gelöscht) |
 
 ## 🔧 Entwicklung
 
