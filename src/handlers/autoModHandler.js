@@ -92,7 +92,13 @@ async function handleMessage(message) {
       if (violations.includes('Spam')) {
         const member = await message.guild.members.fetch(userId).catch(() => null);
         if (member) {
-          await member.timeout(SPAM_CONFIG.muteDuration, 'Auto-Mod: Spam erkannt');
+          try {
+            await member.timeout(SPAM_CONFIG.muteDuration, 'Auto-Mod: Spam erkannt');
+          } catch (timeoutError) {
+            console.error('[AUTO-MOD] Timeout fehlgeschlagen:', timeoutError.message);
+          }
+        } else {
+          console.error('[AUTO-MOD] Mitglied nicht gefunden für Timeout');
         }
 
         // Zusätzlich: Letzte Nachrichten des Nutzers im Channel löschen
@@ -125,7 +131,13 @@ async function handleMessage(message) {
 
       console.log(`[AUTO-MOD] ${message.author.tag} → ${violations.join(', ')}`);
     } catch (error) {
-      console.error('[AUTO-MOD] Fehler bei der Moderation:', error.message);
+      console.error('[AUTO-MOD] Fehler bei der Moderation:', error.code || error.message);
+      if (error.code === 50013) {
+        console.error('[AUTO-MOD] ⚠️ Missing Permissions! Der Bot braucht folgende Berechtigungen:');
+        console.error('[AUTO-MOD]   - Nachrichten verwalten (Manage Messages)');
+        console.error('[AUTO-MOD]   - Mitglieder timeouten (Moderate Members)');
+        console.error('[AUTO-MOD]   - Nachrichten senden (Send Messages)');
+      }
     }
   }
 }
